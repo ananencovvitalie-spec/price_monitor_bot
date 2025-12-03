@@ -7,8 +7,8 @@ from playwright.async_api import async_playwright
 from telegram import Bot
 
 # --- CONFIG ---
-TOKEN = os.environ.get("BOT_TOKEN")   # vom pune token-ul ca variabila de mediu
-CHANNEL = os.environ.get("CHANNEL")   # username-ul canalului sau ID numeric
+TOKEN = os.environ.get("8452580567:AAG599O3xJY70a8ex3dI-qe3caG8tswqv_k")   # vom pune token-ul ca variabila de mediu
+CHANNEL = os.environ.get("http://t.me/priceorder2911_bot")   # username-ul canalului sau ID numeric
 DB_FILE = "db.json"
 CHECK_INTERVAL_SECONDS = 86400  # verifică o dată pe zi
 
