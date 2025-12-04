@@ -3,7 +3,6 @@ import asyncio
 import json
 import datetime
 import os
-from playwright.async_api import async_playwright
 from telegram import Bot
 
 # --- CONFIG ---
