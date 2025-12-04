@@ -1,3 +1,6 @@
 #!/bin/bash
+# Install dependencies
 pip install -r requirements.txt
-python price_bot.py
+
+# Run the bot
+python main.py
