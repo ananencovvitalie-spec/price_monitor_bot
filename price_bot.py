@@ -25,32 +25,32 @@ def save_db(data):
         json.dump(data, f, ensure_ascii=False, indent=2)
 
 # --- Price extractor ---
+import requests
+from bs4 import BeautifulSoup
+
 async def extract_price(url):
-    async with async_playwright() as p:
-        browser = await p.chromium.launch(headless=True, args=["--no-sandbox"])
-        page = await browser.new_page()
-        await page.goto(url, timeout=30000)
-        await page.wait_for_timeout(2500)  # așteaptă să încarce prețul
+    try:
+        headers = {"User-Agent": "Mozilla/5.0"}
+        r = requests.get(url, headers=headers, timeout=15)
+        soup = BeautifulSoup(r.text, "html.parser")
 
-        selectors = [".product-price", ".price", ".product__price", "span.price", ".woocommerce-Price-amount"]
-        text = None
-        for sel in selectors:
-            try:
-                el = await page.query_selector(sel)
-                if el:
-                    text = await el.inner_text()
-                    if text and any(ch.isdigit() for ch in text):
-                        break
-            except:
-                continue
+        # Căutăm toate elementele care conțin "lei" sau cifre
+        possible = soup.find_all(text=True)
 
-        if not text:
-            await browser.close()
+        prices = []
+        for text in possible:
+            txt = text.strip()
+            if "lei" in txt.lower() or any(ch.isdigit() for ch in txt):
+                clean = "".join(ch for ch in txt if ch.isdigit())
+                if clean.isdigit():
+                    prices.append(int(clean))
+
+        if not prices:
             return None
 
-        clean = "".join(ch for ch in text if ch.isdigit())
-        await browser.close()
-        return int(clean) if clean else None
+        return min(prices)  # cel mai mic preț găsit
+    except:
+        return None
 
 # --- Bot logic ---
 async def check_prices():
